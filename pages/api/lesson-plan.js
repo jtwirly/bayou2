@@ -21,9 +21,10 @@ const getLessonPlan = async (req, res) => {
   try {
     const { subject, gradeLevel, duration } = req.query;
     const completion = await openai.createCompletion({
-      model: "text-davinci-002",
+      model: "text-davinci-003",
       prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class with a duration of ${duration}.`,
       max_tokens: 200,
+      temperature: 0.8
     });
 
     const lessonPlan = completion.data.choices[0].text.trim();
@@ -39,3 +40,4 @@ const getLessonPlan = async (req, res) => {
 };
 
 export default handler;
+
