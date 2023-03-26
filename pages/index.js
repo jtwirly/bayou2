@@ -2,6 +2,7 @@
 
 import Head from 'next/head';
 import { useState } from 'react';
+import React from 'react';
 
 const Home = () => {
   const [subject, setSubject] = useState('');
@@ -61,7 +62,13 @@ const Home = () => {
         {lessonPlan && (
           <>
             <h2>Generated Lesson Plan:</h2>
-            <div>{lessonPlan}</div>
+            <div>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: lessonPlan.replace(/\n/g, '<br />'),
+                }}
+              ></p>
+            </div>
           </>
         )}
       </div>

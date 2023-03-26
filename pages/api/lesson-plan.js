@@ -23,7 +23,7 @@ const getLessonPlan = async (req, res) => {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class with a duration of ${duration}.`,
-      max_tokens: 200,
+      max_tokens: 3000,
       temperature: 0.8
     });
 
