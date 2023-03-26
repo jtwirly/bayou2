@@ -39,7 +39,7 @@ const Home = () => {
             value={curriculum}
             onChange={(e) => setCurriculum(e.target.value)}
             className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
-            placeholder="Enter Curriculum (e.g. Ontario, Alberta, BC, USA)"
+            placeholder="Enter Curriculum (e.g. Common Core, Ontario, Texas)"
           />
           <input
             type="text"
