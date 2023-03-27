@@ -1,8 +1,7 @@
-/* eslint-disable react/no-unknown-property */
-
 import Head from 'next/head';
 import { useState } from 'react';
 import React from 'react';
+import axios from 'axios';
 
 const Home = () => {
   const [curriculum, setCurriculum] = useState('');
@@ -13,6 +12,12 @@ const Home = () => {
   const [method, setMethod] = useState('');
   const [lessonPlan, setLessonPlan] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userPlan, setUserPlan] = useState(null);
+
+  const fetchUserPlan = async () => {
+    const response = await axios.get('/api/plan-quota');
+    setUserPlan(response.data);
+  };
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -22,6 +27,10 @@ const Home = () => {
     setLessonPlan(data.text);
     setLoading(false);
   };
+
+  React.useEffect(() => {
+    fetchUserPlan();
+  }, []);
 
   return (
     <div className="flex justify-center">
@@ -34,7 +43,7 @@ const Home = () => {
         <h1 className="text-4xl font-bold text-center">Lesson Plan Generator</h1>
         <h2 className="text-2xl">Create lesson plans for any subject and grade level...</h2>
         <form onSubmit={handleSubmit} className="flex justify-center flex-col gap-5">
-        <input
+          <input
             type="text"
             value={curriculum}
             onChange={(e) => setCurriculum(e.target.value)}
@@ -77,27 +86,33 @@ const Home = () => {
             placeholder="Enter Pedagogical Method (e.g. inquiry-based, lecture-based)"
           />
           <input
-            className="self-end bg-violet-800 text-white py-2 px-5 rounded-md hover:bg-violet-700"
             type="submit"
             value="Generate"
-          />
-        </form>
-        {loading && <div>Loading...</div>}
-        {lessonPlan && (
-          <>
-            <h2>Generated Lesson Plan:</h2>
-            <div>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: lessonPlan.replace(/\n/g, '<br />'),
-                }}
-              ></p>
+            disabled={userPlan && userPlan.quotaUsed >= userPlan.quotaLimit} // Disable the button if usage limit reached
+            />
+            </form>
+            {loading && <div>Loading...</div>}
+            {lessonPlan && (
+              <>
+                <h2>Generated Lesson Plan:</h2>
+                <div>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: lessonPlan.replace(/\n/g, '<br />'),
+                    }}
+                  ></p>
+                </div>
+              </>
+            )}
+            {userPlan && (
+              <div>
+                {userPlan.quotaUsed}/{userPlan.quotaLimit} lesson plans used
+              </div>
+            )}
             </div>
-          </>
-        )}
-      </div>
-  </div>
-);
-        }
-
-export default Home;
+            </div>
+            );
+            };
+            
+            export default Home;
+            
