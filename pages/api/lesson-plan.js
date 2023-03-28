@@ -1,5 +1,5 @@
 import { Configuration, OpenAIApi } from "openai";
-import { Outseta } from "outseta-api-client";
+//import { Outseta } from "outseta-api-client";
 
 // Setup OpenAI
 const openaiConfiguration = new Configuration({
@@ -8,9 +8,9 @@ const openaiConfiguration = new Configuration({
 const openai = new OpenAIApi(openaiConfiguration);
 
 // Setup Outseta
-const outseta = new Outseta({
-  apiKey: process.env.OUTSETA_API_KEY,
-});
+//const outseta = new Outseta({
+//  apiKey: process.env.OUTSETA_API_KEY,
+//});
 
 const handler = async (req, res) => {
   switch (req.method) {
@@ -25,10 +25,10 @@ const handler = async (req, res) => {
 
 const getLessonPlan = async (req, res) => {
   try {
-    const { curriculum, gradeLevel, subject, topic, duration, method } = req.query;
+    const { curriculum, gradeLevel, subject, strand, topic, duration, method, framework } = req.query;
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the topic of ${topic}, with a duration of ${duration}, using the ${method} pedagogical method.`,
+      prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand} and the topic of ${topic}, with a duration of ${duration}, using the ${method} pedagogical method and the ${framework} framework.`,
       max_tokens: 1024,
       temperature: 0.8
     });
@@ -36,11 +36,11 @@ const getLessonPlan = async (req, res) => {
     const lessonPlan = completion.data.choices[0].text.trim();
 
     // Decrement quota used by the user for generating a lesson plan
-    const userId = req.headers["x-user-id"]; // Get the user ID from the request headers
-    const subscription = await outseta.subscriptions.getByUser(userId);
-    const userPlan = subscription.subscriptions[0]; // Assuming there is only one subscription per user
-    userPlan.quotaUsed++;
-    await outseta.subscriptions.update(userPlan.uid, { quotaUsed: userPlan.quotaUsed });
+    //const userId = req.headers["x-user-id"]; // Get the user ID from the request headers
+    //const subscription = await outseta.subscriptions.getByUser(userId);
+    //const userPlan = subscription.subscriptions[0]; // Assuming there is only one subscription per user
+    //userPlan.quotaUsed++;
+    //await outseta.subscriptions.update(userPlan.uid, { quotaUsed: userPlan.quotaUsed });
 
     res.status(200).json({ text: lessonPlan });
   } catch (error) {

@@ -7,30 +7,32 @@ const Home = () => {
   const [curriculum, setCurriculum] = useState('');
   const [gradeLevel, setGradeLevel] = useState('');
   const [subject, setSubject] = useState('');
+  const [strand, setStrand] = useState('');
   const [topic, setTopic] = useState('');
   const [duration, setDuration] = useState('');
   const [method, setMethod] = useState('');
+  const [framework, setFramework] = useState('');
   const [lessonPlan, setLessonPlan] = useState('');
   const [loading, setLoading] = useState(false);
-  const [userPlan, setUserPlan] = useState(null);
+  //const [userPlan, setUserPlan] = useState(null);
 
-  const fetchUserPlan = async () => {
-    const response = await axios.get('/api/plan-quota');
-    setUserPlan(response.data);
-  };
+  //const fetchUserPlan = async () => {
+  //  const response = await axios.get('/api/plan-quota');
+  //  setUserPlan(response.data);
+  //};
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&topic=${topic}&duration=${duration}&method=${method}`);
+    const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&duration=${duration}&method=${method}`);
     const data = await res.json();
     setLessonPlan(data.text);
     setLoading(false);
   };
 
-  React.useEffect(() => {
-    fetchUserPlan();
-  }, []);
+  //React.useEffect(() => {
+    //fetchUserPlan();
+  //}, []);
 
   return (
     <div className="flex justify-center">
@@ -66,6 +68,13 @@ const Home = () => {
           />
           <input
             type="text"
+            value={strand}
+            onChange={(e) => setStrand(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="Enter Strand (e.g. Writing, B1.3, Literature Studies and Reading)"
+          />
+          <input
+            type="text"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
@@ -86,33 +95,35 @@ const Home = () => {
             placeholder="Enter Pedagogical Method (e.g. inquiry-based, lecture-based)"
           />
           <input
+            type="text"
+            value={framework}
+            onChange={(e) => setFramework(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="(Optional) Enter Framework (e.g. UDL, TfU, Big Idea, Throughline (Questions))"
+          />
+          <input
+            className="self-end bg-violet-800 text-white py-2 px-5 rounded-md hover:bg-violet-700"
             type="submit"
             value="Generate"
-            disabled={userPlan && userPlan.quotaUsed >= userPlan.quotaLimit} // Disable the button if usage limit reached
-            />
-            </form>
-            {loading && <div>Loading...</div>}
-            {lessonPlan && (
-              <>
-                <h2>Generated Lesson Plan:</h2>
-                <div>
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: lessonPlan.replace(/\n/g, '<br />'),
-                    }}
-                  ></p>
-                </div>
-              </>
-            )}
-            {userPlan && (
-              <div>
-                {userPlan.quotaUsed}/{userPlan.quotaLimit} lesson plans used
-              </div>
-            )}
+          />
+        </form>
+        {loading && <div>Loading...</div>}
+        {lessonPlan && (
+          <>
+            <h2>Generated Lesson Plan:</h2>
+            <div>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: lessonPlan.replace(/\n/g, '<br />'),
+                }}
+              ></p>
             </div>
-            </div>
-            );
-            };
+          </>
+        )}
+      </div>
+  </div>
+);
+        }
             
-            export default Home;
+export default Home;
             
