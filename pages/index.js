@@ -78,7 +78,7 @@ const Home = () => {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
-            placeholder="Enter Topic (e.g. Adding, The Great Depression, The Solar System)"
+            placeholder="Enter Topic (e.g. Addition, The Great Depression, The Solar System)"
           />
           <input
             type="text"
