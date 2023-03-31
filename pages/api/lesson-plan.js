@@ -42,13 +42,14 @@ const getLessonplan = async (req, res) => {
       temperature: 0.8
     });
 
-    const lessonplan = completion.data.choices[0].text.trim();
-
-    const data = await supabaseClient
-      .from('lessonplans')
-      .update({ lessonplan: lessonplan })
-      .eq('id', 2);
-
+    const text = completion.data.choices[0].text.trim();
+    const cleanedText = text.replace(/^[.,\s]+|[.,\s]+$/g, "");
+    console.log('cleaned text: ', cleanedText);
+    const {data} = await supabaseClient
+      .from("lessonplans")
+      .update({ lessonplan: cleanedText})
+      .match({ id: id }).select();
+    console.log('lesson plan data: ', data);
 
     // Decrement quota used by the user for generating a lesson plan
     //const userId = req.headers["x-user-id"]; // Get the user ID from the request headers
@@ -57,7 +58,7 @@ const getLessonplan = async (req, res) => {
     //userPlan.quotaUsed++;
     //await outseta.subscriptions.update(userPlan.uid, { quotaUsed: userPlan.quotaUsed });
 
-    res.status(200).json({ text: lessonplan });
+    res.status(200).json({ text: cleanedText });
   } catch (error) {
     if (error.response) {
       res.status(error.response.status).send(error.response.data);

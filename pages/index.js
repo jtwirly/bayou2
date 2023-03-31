@@ -11,7 +11,7 @@ import { supabase } from './../lib/supabase';
 
 function Home() {  
   const lessonwiseai = []
-
+  const [record, setRecord] = useState({});
   const [curriculum, setCurriculum] = useState('');
   const [gradeLevel, setGradeLevel] = useState('');
   const [subject, setSubject] = useState('');
@@ -29,29 +29,30 @@ function Home() {
   const [url, setUrl] = useState(null);
   const [quiz, setQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     // Submit inputs to the API route and fetch the response
-    const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`)
-    const data = await res.json();
-    setLessonplan(data.text);
-    setLoading(false);
-    console.log(data);
+
 
 
       // Save the user-generated data to the database
-      res = await fetch('/api/save', {
+    const res = await fetch('/api/save', {
         method: 'POST',
         body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode, lessonplan }),
       });
 
       if (res.ok) {
-        data = await res.json();
-        console.log(data);
-        setUrl(`/lessonplans${data.url}`); // Update the URL state variable
+        const data = await res.json();
+        console.log('save data', data);
+        setRecord(data.data[0]);
+        setUrl(`/lessonplans?${data.url}`); // Update the URL state variable
+        //const res1 = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}&id=${record.id}`)
+        //const lessonPlanData = await res1.json();
+        setLessonplan(data.data[0].lessonplan);
+        setLoading(false);
+        console.log('lessonplan', data.data[0].lessonplan);
       } else {
         console.error('Error saving lesson:', res.status);
    };
@@ -61,7 +62,7 @@ function Home() {
   const generateQuiz = async (e) => {
     setQuizLoading(true);
     console.log('generatequiz');
-    const res = await fetch(`/api/quiz?id=${2}`);
+    const res = await fetch(`/api/quiz?id=${record.id}`);
     const data = await res.json();
 
     setQuiz(data.text);
