@@ -29,6 +29,8 @@ function Home() {
   const [url, setUrl] = useState(null);
   const [resources, setResources] = useState(null);
   const [resourcesLoading, setResourcesLoading] = useState(false);
+  const [slideshow, setSlideshow] = useState(null);
+  const [slideshowLoading, setSlideshowLoading] = useState(false);
   const [quiz, setQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(false);
   const [management, setManagement] = useState(null);
@@ -72,6 +74,17 @@ function Home() {
     setResourcesLoading(false);
     console.log(resources);
     };
+
+    const generateSlideshow = async (e) => {
+      setSlideshowLoading(true);
+      console.log('generateslideshow');
+      const res = await fetch(`/api/slideshow?id=${record.id}`);
+      const data = await res.json();
+  
+      setSlideshow(data.text);
+      setSlideshowLoading(false);
+      console.log(resources);
+      };
   
   const generateQuiz = async (e) => {
     setQuizLoading(true);
@@ -227,6 +240,22 @@ function Home() {
             <p
               dangerouslySetInnerHTML={{
                 __html: resources.replace(/\n/g, '<br />'),
+              }}
+            ></p>
+          </div>
+        </div>
+      )}
+    </div>
+    <div>
+      <button onClick={generateSlideshow}>Generate Slideshow Outline</button>
+      {slideshowLoading && <div>Loading...</div>}
+      {slideshow && (
+        <div>
+          <h2>Generated Slideshow Outline:</h2>
+          <div>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: slideshow.replace(/\n/g, '<br />'),
               }}
             ></p>
           </div>
