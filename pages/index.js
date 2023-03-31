@@ -1,38 +1,71 @@
+// Generate lesson plan, save it to database, and provide URL to go to lesson plan [id] and generate materials for it (or could do that on this same page)
+
+/* eslint-disable react/no-unknown-property */
+
 import Head from 'next/head';
+import Link from 'next/link';
 import { useState } from 'react';
 import React from 'react';
-import axios from 'axios';
+import { nanoid } from 'nanoid';
+import { supabase } from './../lib/supabase';
+import { v4 as uuidv4 } from 'uuid';
 
-const Home = () => {
+function Home() {  
+  const lessonwiseai = []
+
   const [curriculum, setCurriculum] = useState('');
   const [gradeLevel, setGradeLevel] = useState('');
   const [subject, setSubject] = useState('');
   const [strand, setStrand] = useState('');
   const [topic, setTopic] = useState('');
+  const [expectations, setExpectations] = useState('');
   const [duration, setDuration] = useState('');
   const [method, setMethod] = useState('');
   const [framework, setFramework] = useState('');
+  const [considerations, setConsiderations] = useState('');
+  const [accommodations, setAccommodations] = useState('');
+  const [mode, setMode] = useState('');
   const [lessonPlan, setLessonPlan] = useState('');
   const [loading, setLoading] = useState(false);
-  //const [userPlan, setUserPlan] = useState(null);
-
-  //const fetchUserPlan = async () => {
-  //  const response = await axios.get('/api/plan-quota');
-  //  setUserPlan(response.data);
-  //};
+  const [url, setUrl] = useState(null);
+  const [id, setId] = useState(uuidv4()); // Generate a unique ID for the new record
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&duration=${duration}&method=${method}`);
-    const data = await res.json();
-    setLessonPlan(data.text);
-    setLoading(false);
-  };
 
+    // Submit inputs to the API route and fetch the response
+    let res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ id, curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
+      }
+    );
+
+    if (res.ok) {
+      let data = await res.json();
+      console.log(data);
+
+      // Save the user-generated data to the database
+      res = await fetch('/api/save', {
+        method: 'POST',
+        body: JSON.stringify({ id, curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
+      });
+
+      if (res.ok) {
+        data = await res.json();
+        console.log(data);
+        setUrl(`/lessonplans${data.url}`); // Update the URL state variable
+      } else {
+        console.error('Error saving lesson:', res.status);
+      }
+    }
+  }
   //React.useEffect(() => {
     //fetchUserPlan();
   //}, []);
+
+  // Need to change the colours of the following to match this: https://www.figma.com/file/WkNWL12EEL1jhoe9OV2eMO/LessonWise?node-id=3-2776&t=cAz44PqiRicdPI9N-0
 
   return (
     <div className="flex justify-center">
@@ -82,6 +115,13 @@ const Home = () => {
           />
           <input
             type="text"
+            value={expectations}
+            onChange={(e) => setExpectations(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="Enter Expectations (e.g. compare and order integers, decimal numbers, and fractions, separately and in combination, in various contexts)"
+          />
+          <input
+            type="text"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
@@ -102,6 +142,27 @@ const Home = () => {
             placeholder="(Optional) Enter Framework (e.g. UDL, TfU, Big Idea, Throughline (Questions))"
           />
           <input
+            type="text"
+            value={considerations}
+            onChange={(e) => setConsiderations(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="(Optional) Enter Special Considerations (e.g. gifted, modified, ESL)"
+          />
+          <input
+            type="text"
+            value={accommodations}
+            onChange={(e) => setAccommodations(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="(Optional) Enter Accommodations (e.g. deaf, ADHD, hard of hearing)"
+          />
+          <input
+            type="text"
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+            className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
+            placeholder="(Optional) Enter Learning Mode (e.g. auditory, visual, kinesthetic, all)"
+          />
+          <input
             className="self-end bg-violet-800 text-white py-2 px-5 rounded-md hover:bg-violet-700"
             type="submit"
             value="Generate"
@@ -112,6 +173,23 @@ const Home = () => {
           <>
             <h2>Generated Lesson Plan:</h2>
             <div>
+              <p>
+            Curriculum: ${curriculum},
+            Grade level: ${gradeLevel},
+            Subject: ${subject},
+            Strand: ${strand},
+            Topic: ${topic},
+            Expectations: ${expectations},
+            Duration: ${duration},
+            Method: ${method},
+            Framework: ${framework},
+            Considerations: ${considerations},
+            Accommodations: ${accommodations},
+            Mode: ${mode},
+            URL: ${URL}
+
+            Lesson Plan:
+              </p>
               <p
                 dangerouslySetInnerHTML={{
                   __html: lessonPlan.replace(/\n/g, '<br />'),
@@ -120,10 +198,19 @@ const Home = () => {
             </div>
           </>
         )}
+        <ul>
+          {lessonwiseai.map((lessonplans) => (
+            <li key={lessonplans.id}>
+              <h2>{lessonplans.lessonplans}</h2>
+              <p>{lessonplans.response}</p>
+              <Link href={lessonplans.url}>Go to Lesson Plan and generate more resources</Link>
+            </li>
+          ))}
+        </ul>
       </div>
   </div>
-);
-        }
+  );
+}
             
 export default Home;
             
