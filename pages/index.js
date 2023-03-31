@@ -27,6 +27,8 @@ function Home() {
   const [lessonplan, setLessonplan] = useState('');
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(null);
+  const [resources, setResources] = useState(null);
+  const [resourcesLoading, setResourcesLoading] = useState(false);
   const [quiz, setQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(false);
   const [management, setManagement] = useState(null);
@@ -60,6 +62,16 @@ function Home() {
    };
   }
   
+  const generateResources = async (e) => {
+    setResourcesLoading(true);
+    console.log('generateresources');
+    const res = await fetch(`/api/resources?id=${record.id}`);
+    const data = await res.json();
+
+    setResources(data.text);
+    setResourcesLoading(false);
+    console.log(resources);
+    };
   
   const generateQuiz = async (e) => {
     setQuizLoading(true);
@@ -205,6 +217,22 @@ function Home() {
               {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}`}
             </p>
           </div>
+          <div>
+      <button onClick={generateResources}>Generate Resources</button>
+      {resourcesLoading && <div>Loading...</div>}
+      {resources && (
+        <div>
+          <h2>Generated Resources:</h2>
+          <div>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: resources.replace(/\n/g, '<br />'),
+              }}
+            ></p>
+          </div>
+        </div>
+      )}
+    </div>
           <div>
       <button onClick={generateQuiz}>Generate Quiz</button>
       {quizLoading && <div>Loading...</div>}
