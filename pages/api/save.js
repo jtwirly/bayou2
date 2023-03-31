@@ -34,6 +34,7 @@ const saveToSupabase = async (req, res) => {
     const considerations = parseBody.considerations;
     const accommodations = parseBody.accommodations;
     const mode = parseBody.mode;
+    const lessonplan = parseBody.lessonplan;
 
     // Set missing fields to null
     const dataToInsert = {
@@ -49,7 +50,7 @@ const saveToSupabase = async (req, res) => {
       considerations: considerations || '',
       accommodations: accommodations || '',
       mode: mode || '',
-      lessonplan: mode || '',
+      lessonplan: lessonplan || '',
       resources: mode || '',
       slideshow: mode || '',
       worksheet: mode || '',
@@ -58,17 +59,19 @@ const saveToSupabase = async (req, res) => {
       url: `/${nanoid()}`,
     };
     console.log('dataToInsert ', dataToInsert)
-const data = await supabaseClient
+  const resp = await supabaseClient
       .from('lessonplans')
       .insert(dataToInsert);
-//console.log('error', error)
-      console.log('data', data)
+
+console.log('resp', resp);
+const results = await supabaseClient.from('lessonplans').select().eq('id', 1);
+      console.log('results', results)
 
    // if (error) {
    //   throw error;
     //}
 
-    res.status(200).json({});
+    res.status(200).json({results});
   } catch (error) {
     console.error("Error in saveToSupabase:", error);
     res.status(500).json({ error: error.message });

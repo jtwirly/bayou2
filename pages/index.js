@@ -24,9 +24,11 @@ function Home() {
   const [considerations, setConsiderations] = useState('');
   const [accommodations, setAccommodations] = useState('');
   const [mode, setMode] = useState('');
-  const [lessonPlan, setLessonPlan] = useState('');
+  const [lessonplan, setLessonplan] = useState('');
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(null);
+  const [quiz, setQuiz] = useState(null);
+  const [quizLoading, setQuizLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -35,7 +37,7 @@ function Home() {
     // Submit inputs to the API route and fetch the response
     const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`)
     const data = await res.json();
-    setLessonPlan(data.text);
+    setLessonplan(data.text);
     setLoading(false);
     console.log(data);
 
@@ -43,7 +45,7 @@ function Home() {
       // Save the user-generated data to the database
       res = await fetch('/api/save', {
         method: 'POST',
-        body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
+        body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode, lessonplan }),
       });
 
       if (res.ok) {
@@ -55,6 +57,17 @@ function Home() {
    };
   }
   
+  
+  const generateQuiz = async (e) => {
+    setQuizLoading(true);
+    console.log('generatequiz');
+    const res = await fetch(`/api/quiz?id=${2}`);
+    const data = await res.json();
+
+    setQuiz(data.quiz);
+    setQuizLoading(false);
+    console.log(data);
+    };
   //React.useEffect(() => {
     //fetchUserPlan();
   //}, []);
@@ -163,13 +176,13 @@ function Home() {
           />
         </form>
         {loading && <div>Loading...</div>}
-        {lessonPlan && (
+        {lessonplan && (
         <>
           <h2>Generated Lesson Plan:</h2>
           <div>
             <p
               dangerouslySetInnerHTML={{
-                __html: lessonPlan.replace(/\n/g, '<br />'),
+                __html: lessonplan.replace(/\n/g, '<br />'),
               }}
             ></p>
             </div>
@@ -178,6 +191,22 @@ function Home() {
               {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}`}
             </p>
           </div>
+          <div>
+          <button onClick={generateQuiz}>Generate Quiz</button>
+          {quizLoading && <div>Loading...</div>}
+          {quiz && (
+            <div>
+              <h2>Generated Quiz:</h2>
+              <div>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: quiz.replace(/\n/g, '<br />'),
+              }}
+            ></p>
+            </div>
+        </div>
+          )}
+         </div>
         </>
       )}
 

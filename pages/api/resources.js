@@ -1,7 +1,6 @@
 // Generate quiz based on lesson plan
-
-const { Configuration, OpenAIApi } = require("openai");
-const { supabase } = require("../lib/supabase");
+import { Configuration, OpenAIApi } from "openai";
+import { supabase } from '@supabase/supabase-js';
 
 // Setup OpenAI
 const configuration = new Configuration({
