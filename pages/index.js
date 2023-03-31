@@ -31,6 +31,8 @@ function Home() {
   const [resourcesLoading, setResourcesLoading] = useState(false);
   const [slideshow, setSlideshow] = useState(null);
   const [slideshowLoading, setSlideshowLoading] = useState(false);
+  const [worksheet, setWorksheet] = useState(null);
+  const [worksheetLoading, setWorksheetLoading] = useState(false);
   const [quiz, setQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(false);
   const [management, setManagement] = useState(null);
@@ -85,6 +87,17 @@ function Home() {
       setSlideshowLoading(false);
       console.log(resources);
       };
+
+      const generateWorksheet = async (e) => {
+        setWorksheetLoading(true);
+        console.log('generateworksheet');
+        const res = await fetch(`/api/worksheet?id=${record.id}`);
+        const data = await res.json();
+    
+        setWorksheet(data.text);
+        setWorksheetLoading(false);
+        console.log(resources);
+        };
   
   const generateQuiz = async (e) => {
     setQuizLoading(true);
@@ -256,6 +269,22 @@ function Home() {
             <p
               dangerouslySetInnerHTML={{
                 __html: slideshow.replace(/\n/g, '<br />'),
+              }}
+            ></p>
+          </div>
+        </div>
+      )}
+    </div>
+    <div>
+      <button onClick={generateWorksheet}>Generate Worksheet Outline</button>
+      {worksheetLoading && <div>Loading...</div>}
+      {worksheet && (
+        <div>
+          <h2>Generated Worksheet:</h2>
+          <div>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: worksheet.replace(/\n/g, '<br />'),
               }}
             ></p>
           </div>
