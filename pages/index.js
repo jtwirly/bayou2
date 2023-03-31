@@ -64,9 +64,9 @@ function Home() {
     const res = await fetch(`/api/quiz?id=${2}`);
     const data = await res.json();
 
-    setQuiz(data.quiz);
+    setQuiz(data.text);
     setQuizLoading(false);
-    console.log(data);
+    console.log(quiz);
     };
   //React.useEffect(() => {
     //fetchUserPlan();

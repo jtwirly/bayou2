@@ -14,16 +14,16 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
 export default async function handler(req, res) {
-  if (req.method === "GET") {
+  // if (req.method === "GET") {
     try {
       const { id } = req.query;
 
-      const { data } = await supabaseClient
+      const {data}  = await supabaseClient
         .from("lessonplans")
         .select()
         .eq("id", id);
 
-      console.log("data:", data);
+      console.log("data: ", data);
 
       if (!data || data.length === 0) {
         res.status(404).json({ error: "Lesson plan not found" });
@@ -56,11 +56,11 @@ export default async function handler(req, res) {
         const cleanedText = text.replace(/^[.,\s]+|[.,\s]+$/g, "");
 
         // Save the generated quiz to Supabase
-        const { error: updateError } = await supabaseClient
+        const { data: updatedData, error: updateError } = await supabaseClient
           .from("lessonplans")
           .update({ quiz: cleanedText })
-          .match({ id: id });
-
+          .match({ id: id }).select();
+        console.log('updatedData ', updatedData);
         if (updateError) {
           console.error("Error updating quiz in the lesson plan:", updateError);
           res.status(500).json({ error: "Internal Server Error" });
@@ -73,8 +73,8 @@ export default async function handler(req, res) {
       console.error("Error response:", error.response?.data);
       res.status(500).json({ error: "Internal Server Error" });
     }
-  } else {
-    res.setHeader("Allow", ["GET"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+  // } else {
+  //   res.setHeader("Allow", ["GET"]);
+  //   res.status(405).end(`Method ${req.method} Not Allowed`);
+  // }
 }
