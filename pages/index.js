@@ -162,6 +162,7 @@ function Home() {
             value="Generate"
           />
         </form>
+        {loading && <div>Loading...</div>}
         {lessonPlan && (
         <>
           <h2>Generated Lesson Plan:</h2>
@@ -171,6 +172,8 @@ function Home() {
                 __html: lessonPlan.replace(/\n/g, '<br />'),
               }}
             ></p>
+            </div>
+            <div>
             <p>
               {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}, URL: ${url}`}
             </p>
