@@ -1,4 +1,5 @@
 // Generate lesson plan, save it to database, and provide URL to go to lesson plan [id] and generate materials for it (or could do that on this same page)
+// Add learning style
 
 /* eslint-disable react/no-unknown-property */
 
@@ -219,10 +220,10 @@ function Home() {
             value={mode}
             onChange={(e) => setMode(e.target.value)}
             className="border-2 border-violet-800 py-3 px-5 rounded-xl text-xl"
-            placeholder="(Optional) Enter Learning Mode (e.g. auditory, visual, kinesthetic, all)"
+            placeholder="(Optional) Enter Learning Mode (e.g. in-person, hybrid, online)"
           />
           <input
-            className="self-end bg-violet-800 text-white py-2 px-5 rounded-md hover:bg-violet-700"
+            className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700"
             type="submit"
             value="Generate"
           />
@@ -244,7 +245,7 @@ function Home() {
             </p>
           </div>
           <div>
-      <button onClick={generateResources}>Generate Resources</button>
+      <button onClick={generateResources} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Resources</button>
       {resourcesLoading && <div>Loading...</div>}
       {resources && (
         <div>
@@ -260,7 +261,7 @@ function Home() {
       )}
     </div>
     <div>
-      <button onClick={generateSlideshow}>Generate Slideshow Outline</button>
+      <button onClick={generateSlideshow} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Slideshow Outline</button>
       {slideshowLoading && <div>Loading...</div>}
       {slideshow && (
         <div>
@@ -276,7 +277,7 @@ function Home() {
       )}
     </div>
     <div>
-      <button onClick={generateWorksheet}>Generate Worksheet Outline</button>
+      <button onClick={generateWorksheet} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Worksheet Outline</button>
       {worksheetLoading && <div>Loading...</div>}
       {worksheet && (
         <div>
@@ -292,7 +293,7 @@ function Home() {
       )}
     </div>
           <div>
-      <button onClick={generateQuiz}>Generate Quiz</button>
+      <button onClick={generateQuiz} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Quiz</button>
       {quizLoading && <div>Loading...</div>}
       {quiz && (
         <div>
@@ -308,11 +309,11 @@ function Home() {
       )}
     </div>
     <div>
-      <button onClick={generateManagement}>Generate Classroom Management Tip</button>
+      <button onClick={generateManagement} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Classroom Management Tip</button>
       {managementLoading && <div>Loading...</div>}
       {management && (
         <div>
-          <h2>Classroom Management Tip:</h2>
+          <h2>Generated Classroom Management Tip:</h2>
           <div>
             <p>{management}</p>
           </div>
