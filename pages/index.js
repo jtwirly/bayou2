@@ -175,7 +175,7 @@ function Home() {
             </div>
             <div>
             <p>
-              {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}, URL: ${url}`}
+              {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}`}
             </p>
           </div>
         </>
