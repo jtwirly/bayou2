@@ -2,11 +2,16 @@
 
 import { nanoid } from 'nanoid';
 import { supabase } from '../lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://zcbnbnzqnvdmkopmwpjk.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const supabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { id, resources, slideshow, worksheet, quiz, management } = req.body;
+    const { resources, slideshow, worksheet, quiz, management } = req.body;
 
     // Save the data to the database
     const saveMaterials = async () => {

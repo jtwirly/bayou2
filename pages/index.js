@@ -8,7 +8,6 @@ import { useState } from 'react';
 import React from 'react';
 import { nanoid } from 'nanoid';
 import { supabase } from './../lib/supabase';
-import { v4 as uuidv4 } from 'uuid';
 
 function Home() {  
   const lessonwiseai = []
@@ -28,7 +27,6 @@ function Home() {
   const [lessonPlan, setLessonPlan] = useState('');
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(null);
-  const [id, setId] = useState(uuidv4()); // Generate a unique ID for the new record
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -38,7 +36,7 @@ function Home() {
     let res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`,
       {
         method: 'POST',
-        body: JSON.stringify({ id, curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
+        body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
       }
     );
 
@@ -49,7 +47,7 @@ function Home() {
       // Save the user-generated data to the database
       res = await fetch('/api/save', {
         method: 'POST',
-        body: JSON.stringify({ id, curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
+        body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
       });
 
       if (res.ok) {

@@ -27,7 +27,7 @@ const handler = async (req, res) => {
 
 const getLessonPlan = async (req, res) => {
   try {
-    const { id, curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode } = req.query;
+    const { curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode } = req.query;
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Ensure there is differentiation and leveled activities as part of the lesson plan.`,

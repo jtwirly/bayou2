@@ -21,47 +21,58 @@ const handler = async (req, res) => {
 
 const saveToSupabase = async (req, res) => {
   try {
-    const curriculum = req.body.get('curriculum');
-    const gradeLevel = req.body.get('gradeLevel');
-    const subject = req.body.get('subject');
-    const strand = req.body.get('strand');
-    const topic = req.body.get('topic');
-    const expectations = req.body.get('expectations');
-    const duration = req.body.get('duration');
-    const method = req.body.get('method');
-    const framework = req.body.get('framework');
-    const considerations = req.body.get('considerations');
-    const accommodations = req.body.get('accommodations');
-    const mode = req.body.get('mode');
+    const parseBody = JSON.parse(req.body);
+    const curriculum = parseBody.curriculum;
+    const gradeLevel = parseBody.gradeLevel;
+    const subject = parseBody.subject;
+    const strand = parseBody.strand;
+    const topic = parseBody.topic;
+    const expectations = parseBody.expectations;
+    const duration = parseBody.duration;
+    const method = parseBody.method;
+    const framework = parseBody.framework;
+    const considerations = parseBody.considerations;
+    const accommodations = parseBody.accommodations;
+    const mode = parseBody.mode;
 
     // Set missing fields to null
     const dataToInsert = {
-      curriculum: curriculum || null,
-      gradeLevel: gradeLevel || null,
-      subject: subject || null,
-      strand: strand || null,
-      topic: topic || null,
-      expectations: expectations || null,
-      duration: duration || null,
-      method: method || null,
-      framework: framework || null,
-      considerations: considerations || null,
-      accommodations: accommodations || null,
-      mode: mode || null,
+      curriculum: curriculum || '',
+      gradeLevel: gradeLevel || '',
+      subject: subject || '',
+      strand: strand || '',
+      topic: topic || '',
+      expectations: expectations || '',
+      duration: duration || '',
+      method: method || '',
+      framework: framework || '',
+      considerations: considerations || '',
+      accommodations: accommodations || '',
+      mode: mode || '',
+      lessonplan: mode || '',
+      resources: mode || '',
+      slideshow: mode || '',
+      worksheet: mode || '',
+      quiz: mode || '',
+      management: mode || '',
       url: `/${nanoid()}`,
     };
-
-    const { data, error } = await supabaseClient
+    console.log('dataToInsert ', dataToInsert)
+const data = await supabaseClient
       .from('lessonplans')
-      .insert([dataToInsert]);
+      .insert(dataToInsert);
+//console.log('error', error)
+      console.log('data', data)
 
-    if (error) {
-      throw error;
-    }
+   // if (error) {
+   //   throw error;
+    //}
 
-    res.status(200).json(data[0]);
+    res.status(200).json({});
   } catch (error) {
     console.error("Error in saveToSupabase:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
+export default handler;
