@@ -1,6 +1,7 @@
 // Surface user's lesson plan URLs
+import { Configuration, OpenAIApi } from "openai";
+import { supabase } from '@supabase/supabase-js';
 
-const { supabase } = require("../lib/supabase");
 //import { Outseta } from "outseta-api-client";
 
 export default async function handler(req, res) {

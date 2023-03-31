@@ -1,7 +1,6 @@
 // Save materials to Supabase and URL, under same record that the lesson plan is in
 
 import { nanoid } from 'nanoid';
-import { supabase } from '../lib/supabase';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://zcbnbnzqnvdmkopmwpjk.supabase.co';
