@@ -33,16 +33,12 @@ function Home() {
     e.preventDefault();
 
     // Submit inputs to the API route and fetch the response
-    let res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode }),
-      }
-    );
+    const res = await fetch(`/api/lesson-plan?curriculum=${curriculum}&gradeLevel=${gradeLevel}&subject=${subject}&strand=${strand}&topic=${topic}&expectations=${expectations}&duration=${duration}&method=${method}&considerations=${considerations}&accommodations=${accommodations}&mode=${mode}`)
+    const data = await res.json();
+    setLessonPlan(data.text);
+    setLoading(false);
+    console.log(data);
 
-    if (res.ok) {
-      let data = await res.json();
-      console.log(data);
 
       // Save the user-generated data to the database
       res = await fetch('/api/save', {
@@ -56,9 +52,9 @@ function Home() {
         setUrl(`/lessonplans${data.url}`); // Update the URL state variable
       } else {
         console.error('Error saving lesson:', res.status);
-      }
-    }
+   };
   }
+  
   //React.useEffect(() => {
     //fetchUserPlan();
   //}, []);
@@ -166,36 +162,22 @@ function Home() {
             value="Generate"
           />
         </form>
-        {loading && <div>Loading...</div>}
         {lessonPlan && (
-          <>
-            <h2>Generated Lesson Plan:</h2>
-            <div>
-              <p>
-            Curriculum: ${curriculum},
-            Grade level: ${gradeLevel},
-            Subject: ${subject},
-            Strand: ${strand},
-            Topic: ${topic},
-            Expectations: ${expectations},
-            Duration: ${duration},
-            Method: ${method},
-            Framework: ${framework},
-            Considerations: ${considerations},
-            Accommodations: ${accommodations},
-            Mode: ${mode},
-            URL: ${URL}
+        <>
+          <h2>Generated Lesson Plan:</h2>
+          <div>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: lessonPlan.replace(/\n/g, '<br />'),
+              }}
+            ></p>
+            <p>
+              {`Curriculum: ${curriculum}, Grade level: ${gradeLevel}, Subject: ${subject}, Strand: ${strand}, Topic: ${topic}, Expectations: ${expectations}, Duration: ${duration}, Method: ${method}, Framework: ${framework}, Considerations: ${considerations}, Accommodations: ${accommodations}, Mode: ${mode}, URL: ${url}`}
+            </p>
+          </div>
+        </>
+      )}
 
-            Lesson Plan:
-              </p>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: lessonPlan.replace(/\n/g, '<br />'),
-                }}
-              ></p>
-            </div>
-          </>
-        )}
         <ul>
           {lessonwiseai.map((lessonplans) => (
             <li key={lessonplans.id}>
@@ -208,7 +190,7 @@ function Home() {
       </div>
   </div>
   );
-}
+  }
             
 export default Home;
             

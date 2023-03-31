@@ -16,11 +16,11 @@ const openai = new OpenAIApi(configuration);
 
 const handler = async (req, res) => {
   switch (req.method) {
-    case "POST":
+    case "GET":
       await getLessonPlan(req, res);
       break;
     default:
-      res.setHeader("Allow", ["POST"]);
+      res.setHeader("Allow", ["GET"]);
       res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 };

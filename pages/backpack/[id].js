@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@supabase/supabase-js';
 
 export default function LessonPlans() {
   const router = useRouter();
