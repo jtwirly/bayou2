@@ -266,8 +266,8 @@ function Home() {
       {slideshowLoading && <div>Loading...</div>}
       {slideshow && (
         <div>
-          <p>Note this is a beta feature. Coming soon: enhanced slideshow outlines and possible slideshow generation.</p>
-          <h2>Generated Slideshow Outline *Beta*:</h2>
+        <p style={{marginBottom: "20px"}}>Note this is a beta feature. Coming soon: enhanced slideshow outlines and possible slideshow generation. In the meantime, if you want to generate a slideshow with visuals for this lesson plan, you can use a software like <a href="https://gamma.app" target="_blank">https://gamma.app</a>, select their AI tool, copy this presentation outline or the lesson plan in, and it will generate a presentation for you.</p>          <h2>Generated Slideshow Outline *Beta*:</h2>
+          <p> </p>
           <div>
             <p
               dangerouslySetInnerHTML={{
