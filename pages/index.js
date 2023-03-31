@@ -136,7 +136,7 @@ function Home() {
       </Head>
       <div className="flex pt-40 p-4 flex-col max-w-lg w-full h-screen gap-6">
         <h1 className="text-4xl font-bold text-center">Lesson Plan Generator</h1>
-        <h2 className="text-2xl">Create lesson plans and resources for any subject and grade level...</h2>
+        <h2 className="text-2xl">Generate lesson plans and resources for any subject and grade level...</h2>
         <form onSubmit={handleSubmit} className="flex justify-center flex-col gap-5">
           <input
             type="text"
@@ -266,8 +266,8 @@ function Home() {
       {slideshowLoading && <div>Loading...</div>}
       {slideshow && (
         <div>
-          <h2>Generated Slideshow Outline *Beta*:</h2>
           <p>Note this is a beta feature. Coming soon: enhanced slideshow outlines and possible slideshow generation.</p>
+          <h2>Generated Slideshow Outline *Beta*:</h2>
           <div>
             <p
               dangerouslySetInnerHTML={{

@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 
         const completion = await openai.createCompletion({
           model: "text-davinci-003",
-          prompt: `Create a quiz based on this lesson plan: ${lessonplan}. For a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Please ensure the quiz questions focus on the topic and expectations. Provide the answers as well below the quiz.`,
+          prompt: `Generate a ${topic} worksheet for grade ${gradeLevel} students based on this lesson plan: ${lessonplan}. This quiz should be designed for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Please ensure the quiz questions focus on the topic and expectations. Provide the answers below the bottom of the quiz.`,
           max_tokens: 1024,
           temperature: 0.8,
         });
