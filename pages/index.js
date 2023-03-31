@@ -130,13 +130,13 @@ function Home() {
   return (
     <div className="flex justify-center">
       <Head>
-        <title>Lesson Plan Generator</title>
+        <title>Lesson Plan & Resource Generator</title>
         <meta name="description" content="App that generates lesson plans using OpenAI GPT-3" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex pt-40 p-4 flex-col max-w-lg w-full h-screen gap-6">
         <h1 className="text-4xl font-bold text-center">Lesson Plan Generator</h1>
-        <h2 className="text-2xl">Create lesson plans for any subject and grade level...</h2>
+        <h2 className="text-2xl">Create lesson plans and resources for any subject and grade level...</h2>
         <form onSubmit={handleSubmit} className="flex justify-center flex-col gap-5">
           <input
             type="text"
@@ -228,6 +228,7 @@ function Home() {
             value="Generate"
           />
         </form>
+        <p>Please ensure to save your work by copying and pasting it to something like a Google Doc or Word Doc. We will have a saving function coming soon.</p>
         {loading && <div>Loading...</div>}
         {lessonplan && (
         <>
@@ -261,11 +262,12 @@ function Home() {
       )}
     </div>
     <div>
-      <button onClick={generateSlideshow} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Slideshow Outline</button>
+      <button onClick={generateSlideshow} className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700">Generate Slideshow Outline *Beta*</button>
       {slideshowLoading && <div>Loading...</div>}
       {slideshow && (
         <div>
-          <h2>Generated Slideshow Outline:</h2>
+          <h2>Generated Slideshow Outline *Beta*:</h2>
+          <p>Note this is a beta feature. Coming soon: enhanced slideshow outlines and possible slideshow generation.</p>
           <div>
             <p
               dangerouslySetInnerHTML={{
