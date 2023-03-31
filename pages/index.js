@@ -29,6 +29,8 @@ function Home() {
   const [url, setUrl] = useState(null);
   const [quiz, setQuiz] = useState(null);
   const [quizLoading, setQuizLoading] = useState(false);
+  const [management, setManagement] = useState(null);
+  const [managementLoading, setManagementLoading] = useState(false);
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -69,6 +71,17 @@ function Home() {
     setQuizLoading(false);
     console.log(quiz);
     };
+
+    const generateManagement = async (e) => {
+      setManagementLoading(true);
+      console.log('generatemanagement');
+      const res = await fetch(`/api/management?id=${record.id}`);
+      const data = await res.json();
+  
+      setManagement(data.text);
+      setManagementLoading(false);
+      console.log(management);
+      };
   //React.useEffect(() => {
     //fetchUserPlan();
   //}, []);
@@ -193,24 +206,35 @@ function Home() {
             </p>
           </div>
           <div>
-          <button onClick={generateQuiz}>Generate Quiz</button>
-          {quizLoading && <div>Loading...</div>}
-          {quiz && (
-            <div>
-              <h2>Generated Quiz:</h2>
-              <div>
+      <button onClick={generateQuiz}>Generate Quiz</button>
+      {quizLoading && <div>Loading...</div>}
+      {quiz && (
+        <div>
+          <h2>Generated Quiz:</h2>
+          <div>
             <p
               dangerouslySetInnerHTML={{
                 __html: quiz.replace(/\n/g, '<br />'),
               }}
             ></p>
-            </div>
+          </div>
         </div>
-          )}
-         </div>
-        </>
       )}
-
+    </div>
+    <div>
+      <button onClick={generateManagement}>Generate Classroom Management Tip</button>
+      {managementLoading && <div>Loading...</div>}
+      {management && (
+        <div>
+          <h2>Classroom Management Tip:</h2>
+          <div>
+            <p>{management}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </>
+)}
         <ul>
           {lessonwiseai.map((lessonplans) => (
             <li key={lessonplans.id}>
