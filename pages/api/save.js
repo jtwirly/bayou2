@@ -64,6 +64,7 @@ const saveToSupabase = async (req, res) => {
       management: mode || '',
       url: `/${nanoid()}`,
     };
+
     console.log('dataToInsert ', dataToInsert)
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
@@ -87,6 +88,7 @@ console.log('data in save', data);
     //}
 
     res.status(200).json({data});
+    console.log('returning')
   } catch (error) {
     console.error("Error in saveToSupabase:", error);
     res.status(500).json({ error: error.message });
