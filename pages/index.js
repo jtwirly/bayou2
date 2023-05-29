@@ -46,7 +46,7 @@ function Home() {
 
 
 
-      // Save the user-generated data to the database
+      // Save the user-generated data to the project database
     const res = await fetch('/api/save', {
         method: 'POST',
         body: JSON.stringify({ curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode, lessonplan }),
