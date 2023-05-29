@@ -66,15 +66,16 @@ const saveToSupabase = async (req, res) => {
     };
 
     console.log('dataToInsert ', dataToInsert)
-    const completion = await openai.createCompletion({
+     const completion = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Ensure there is differentiation and leveled activities as part of the lesson plan.`,
       max_tokens: 1024,
       temperature: 0.8
     });
-    console.log('completion', completion);
-
+    //console.log('completion', completion);
+    
     const text = completion.data.choices[0].text.trim();
+    console.log('text', text)
     const cleanedText = text.replace(/^[.,\s]+|[.,\s]+$/g, "");
     console.log('cleaned text: ', cleanedText);
     dataToInsert.lessonplan = cleanedText;
