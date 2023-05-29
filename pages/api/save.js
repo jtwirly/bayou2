@@ -72,8 +72,8 @@ const saveToSupabase = async (req, res) => {
       max_tokens: 1024,
       temperature: 0.8
     });
-    //console.log('completion', completion);
-    
+    console.log('completion', completion.data);
+
     const text = completion.data.choices[0].text.trim();
     console.log('text', text)
     const cleanedText = text.replace(/^[.,\s]+|[.,\s]+$/g, "");
