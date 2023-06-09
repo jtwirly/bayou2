@@ -45,7 +45,6 @@ function Home() {
     // Submit inputs to the API route and fetch the response
 
 
-
       // Save the user-generated data to the database
     const res = await fetch('/api/save', {
         method: 'POST',
