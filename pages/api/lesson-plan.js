@@ -3,6 +3,8 @@
 import { Configuration, OpenAIApi } from "openai";
 //import { Outseta } from "outseta-api-client";
 import { createClient } from '@supabase/supabase-js';
+import retry from 'async-retry'; // Import the retry function
+
 // Setup OpenAI
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -36,14 +38,24 @@ const getLessonplan = async (req, res) => {
   try {
     const { curriculum, gradeLevel, subject, strand, topic, expectations, duration, method, framework, considerations, accommodations, mode, id } = req.query;
     const completion = await retry(async bail => {
-      // if anything throws, we retry
-      const result = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Ensure there is differentiation and leveled activities as part of the lesson plan.`,
-        max_tokens: 1024,
-        temperature: 0.8
-      });
-      return result;
+      try {
+        // if anything throws, we retry
+        const result = await openai.createCompletion({
+          model: "text-davinci-003",
+          prompt: `Create a lesson plan for a ${gradeLevel} grade ${subject} class following the ${curriculum} curriculum, focusing on the strand of ${strand}, the topic of ${topic} and the expectations of ${expectations}, with a duration of ${duration}, using the ${method} pedagogical method, the ${framework} framework, and the ${mode} learning mode, taking into account considerations for ${considerations} and accommodation for ${accommodations}. Ensure there is differentiation and leveled activities as part of the lesson plan.`,
+          max_tokens: 1024,
+          temperature: 0.8
+        });
+        return result;
+      } catch (err) {
+        const statusCode = err?.response?.status;
+        if (statusCode === 429 || statusCode === 503) {
+            // If status is 429 or 503, re-throw the error to trigger a retry
+            throw err;
+        }
+        // If it's a different error, bail out and don't retry
+        bail(err);
+      }  
     }, {
       retries: 5,
       factor: 2, // exponential factor
