@@ -13,9 +13,9 @@ function Home() {
   const [customerID, setCustomerID] = useState('');
 
   // Handle input changes
-  const handleCredentialsChange = (e) => {
-    setBayouCredentials({ ...bayouCredentials, [e.target.name]: e.target.value });
-  };
+  //const handleCredentialsChange = (e) => {
+    //setBayouCredentials({ ...bayouCredentials, [e.target.name]: e.target.value });
+  //};
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -36,21 +36,27 @@ function Home() {
       }
 
       const data = await res.json();
-      setUtilityData(data.utilityData);
+      console.log("API Data:", data);
+      const transformedData = transformUtilityData(data);
+      console.log("Transformed Data:", transformedData); // Check this output
+      setUtilityData(transformedData);
 
       // Fetching tips
-      const tipsRes = await fetch('/api/generateTips', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ utilityData: data.utilityData })
-      });
+      // The following block is commented out to skip fetching tips for now
+    /*
+    const tipsRes = await fetch('/api/generateTips', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ utilityData: data.utilityData })
+    });
 
-      if (!tipsRes.ok) {
-        throw new Error('Failed to fetch tips');
-      }
+    if (!tipsRes.ok) {
+      throw new Error('Failed to fetch tips');
+    }
 
-      const tipsData = await tipsRes.json();
-      setTips(tipsData.tips);
+    const tipsData = await tipsRes.json();
+    setTips(tipsData.tips);
+    */
 
     } catch (error) {
       console.error("Error during form submission:", error.message);
@@ -60,26 +66,43 @@ function Home() {
     }
   };
 
+  const transformUtilityData = (utilityData) => {
+    if (!utilityData.meters || utilityData.meters.length === 0) {
+      return [];
+    }
+  
+    console.log("Meters Data:", utilityData.meters);
+  
+    const intervals = utilityData.meters[0].intervals;
+  
+    return intervals.map(interval => ({
+      date: interval.start, // Adjust if the structure is different
+      usage: interval.electricity_consumption // Adjust the property name as needed
+    }));
+  };  
+  
+
 // UtilityDataChart Component
 const UtilityDataChart = ({ utilityData }) => {
+  console.log("Chart Data:", utilityData);
   // Debugging line: Check what utilityData contains
-  console.log("Utility Data:", utilityData);
+  //console.log("Utility Data:", utilityData);
 
   // Ensure utilityData is an array before mapping
-  const chartData = Array.isArray(utilityData) ? utilityData : [];
+  //const chartData = Array.isArray(utilityData) ? utilityData : [];
 
   const data = {
-    labels: chartData.map(item => item.date),
+    labels: utilityData.map(item => new Date(item.date).toLocaleDateString()),
     datasets: [
-      {
-        label: 'Energy Usage',
-        data: chartData.map(item => item.usage),
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
+        {
+            label: 'Electricity Consumption',
+            data: utilityData.map(item => item.usage),
+            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
     ],
-  };
+};
 
-  return <Bar data={data} />;
+return <Bar data={data} />;
 };
 
   // UI Rendering
@@ -107,11 +130,8 @@ const UtilityDataChart = ({ utilityData }) => {
           />
         </form>
         {loading && <div>Loading...</div>}
-        {utilityData && (
-          <div>
-            <h2>Utility Data Visualization:</h2>
-            <UtilityDataChart utilityData={utilityData} />
-          </div>
+        {utilityData && utilityData.length > 0 && (
+          <UtilityDataChart utilityData={utilityData} />
         )}
         {tips && (
           <div>

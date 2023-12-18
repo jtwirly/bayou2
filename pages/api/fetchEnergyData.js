@@ -17,6 +17,7 @@ export default async function handler(req, res) {
     try {
       // Fetch utility data using Bayou API
       const intervalData = await fetchIntervalDataFromBayou(customerID);
+      console.log("Interval Data:", intervalData)
       //const utilityData = await fetchUtilityDataFromBayou(email, password);
       res.status(200).json({ utilityData: intervalData });
       //res.status(200).json({ utilityData });
@@ -30,11 +31,28 @@ export default async function handler(req, res) {
   }
 }
 
-// Fetch a specific page of interval data
-const fetchIntervalDataFromBayou = async (customerID, page = 1, pageSize = 10) => {
-    const response = await axios.get(`https://${bayouDomain}/api/v2/customers/${customerID}/intervals?page=${page}&pageSize=${pageSize}`, { headers: authHeaders });
+const fetchIntervalDataFromBayou = async (customerID) => {
+    // Get the current date and the date one month ago
+    const currentDate = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(currentDate.getMonth() - 1);
+
+    // Format dates in YYYY-MM-DD format
+    const endDate = currentDate.toISOString().split('T')[0];
+    const startDate = oneMonthAgo.toISOString().split('T')[0];
+
+    // Construct the URL with query parameters for date range
+    const url = `https://${bayouDomain}/api/v2/customers/${customerID}/intervals?start=${startDate}&end=${endDate}`;
+
+    const response = await axios.get(url, { headers: authHeaders });
     return response.data;
 };
+
+// Fetch a specific page of interval data
+//const fetchIntervalDataFromBayou = async (customerID, page = 1, pageSize = 10) => {
+    //const response = await axios.get(`https://${bayouDomain}/api/v2/customers/${customerID}/intervals?page=${page}&pageSize=${pageSize}`, { headers: authHeaders });
+    //return response.data;
+//};
 
 //Fetch all the data
 //const fetchIntervalDataFromBayou = async (customerID) => {
