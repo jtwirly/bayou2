@@ -10,6 +10,7 @@ function Home() {
   const [utilityData, setUtilityData] = useState(null);
   const [tips, setTips] = useState('');
   const [loading, setLoading] = useState(false);
+  const [customerID, setCustomerID] = useState('');
 
   // Handle input changes
   const handleCredentialsChange = (e) => {
@@ -26,7 +27,8 @@ function Home() {
       const res = await fetch('/api/fetchEnergyData', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(bayouCredentials)
+        body: JSON.stringify({ customerID })
+        //body: JSON.stringify(bayouCredentials)
       });
 
       if (!res.ok) {
@@ -58,15 +60,20 @@ function Home() {
     }
   };
 
-  // UtilityDataChart Component
+// UtilityDataChart Component
 const UtilityDataChart = ({ utilityData }) => {
-  // Assuming utilityData is an array of objects with 'date' and 'usage' properties
+  // Debugging line: Check what utilityData contains
+  console.log("Utility Data:", utilityData);
+
+  // Ensure utilityData is an array before mapping
+  const chartData = Array.isArray(utilityData) ? utilityData : [];
+
   const data = {
-    labels: utilityData.map(item => item.date),
+    labels: chartData.map(item => item.date),
     datasets: [
       {
         label: 'Energy Usage',
-        data: utilityData.map(item => item.usage),
+        data: chartData.map(item => item.usage),
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
     ],
@@ -86,20 +93,12 @@ const UtilityDataChart = ({ utilityData }) => {
         <h1 className="text-4xl font-bold text-center">Energy Usage Dashboard</h1>
         <form onSubmit={handleSubmit} className="flex justify-center flex-col gap-5">
           <input
-            type="email"
-            name="email"
-            value={bayouCredentials.email}
-            onChange={handleCredentialsChange}
+            type="text"
+            name="customerID"
+            value={customerID}
+            onChange={(e) => setCustomerID(e.target.value)}
             className="border-2 py-3 px-5 rounded-xl text-xl"
-            placeholder="Enter Bayou Email"
-          />
-          <input
-            type="password"
-            name="password"
-            value={bayouCredentials.password}
-            onChange={handleCredentialsChange}
-            className="border-2 py-3 px-5 rounded-xl text-xl"
-            placeholder="Enter Bayou Password"
+            placeholder="Enter Customer ID"
           />
           <input
             className="self-end bg-black text-white py-2 px-5 rounded-md hover:bg-gray-700"
