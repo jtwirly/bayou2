@@ -11,14 +11,8 @@ const GasChart = ({ utilityData }) => {
   const dataPoints = [];
 
   utilityData.meters.forEach(meter => {
-    meter.intervals.forEach(interval => {
-      // Ensure gas consumption data exists and is not null
-      if (interval.gas_consumption != null) {
-        labels.push(new Date(interval.start).toLocaleDateString());
-        dataPoints.push(parseFloat(interval.gas_consumption));
-      }
-    });
-  });
+    console.log(`Meter: ${meter.id}, Intervals:`, meter.intervals.slice(0, 10));
+  });  
 
   // Check if we have any data points
   if (dataPoints.length === 0) {

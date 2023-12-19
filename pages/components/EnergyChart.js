@@ -11,11 +11,8 @@ const EnergyChart = ({ utilityData }) => {
   const dataPoints = [];
 
   utilityData.meters.forEach(meter => {
-    meter.intervals.forEach(interval => {
-      labels.push(new Date(interval.start).toLocaleDateString());
-      dataPoints.push(interval.net_electricity_consumption);
-    });
-  });
+    console.log(`Meter: ${meter.id}, Intervals:`, meter.intervals.slice(0, 10));
+  });   
 
   // Chart data structure for Chart.js
   const chartData = {
